@@ -1,23 +1,26 @@
 import * as axios from "axios";
 
-interface User {
+// https://developers.activecollab.com/api-documentation/
+// https://github.com/GerardSmit/ActiveCollab.js
+
+type LoginUser = {
   first_name: string;
   last_name: string;
   intent: string;
   avatar_url: string;
-}
+};
 
-interface IAccount {
+type LoginAccount = {
   url: string;
   name: number;
   display_name: string;
   class: string;
-}
+};
 
 type LoginResponse = {
   is_ok: boolean;
-  accounts: Array<IAccount>;
-  user: User;
+  accounts: Array<LoginAccount>;
+  user: LoginUser;
 };
 
 type IssueTokenResponse = {
@@ -32,9 +35,9 @@ class Account {
   private user_id?: number;
 
   private intent: string;
-  private account: IAccount;
+  private account: LoginAccount;
 
-  constructor(user: User, account: IAccount) {
+  constructor(user: LoginUser, account: LoginAccount) {
     this.intent = user.intent;
     this.account = account;
 
@@ -93,7 +96,7 @@ class Account {
 }
 
 class Client {
-  user?: User;
+  user?: LoginUser;
   accounts: Array<Account> = [];
 
   login(email: string, password: string) {
