@@ -27,9 +27,12 @@ app.get("/test", async (req, res, next) => {
     const account = client.accounts[0];
 
     await account.issueToken().catch((e) => console.log(e));
+
     const user = await account.user();
 
-    return res.send(user);
+    const user_projects = await user.projects();
+
+    return res.send(user_projects);
   } catch (error) {
     next(error);
 

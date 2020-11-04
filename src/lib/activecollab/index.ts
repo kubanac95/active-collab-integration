@@ -28,6 +28,28 @@ type IssueTokenResponse = {
   token: string;
 };
 
+class User implements Partial<IUser> {
+  private account: Account;
+
+  id: number;
+  url_path: string;
+
+  constructor(account: Account, user: IUser) {
+    this.account = account;
+
+    this.id = user.id;
+    this.url_path = user.url_path;
+
+    Object.assign(this, user);
+  }
+
+  projects() {
+    return this.account
+      .api(this.url_path + "/projects")
+      .then(({ data }: { data: TResponseCollection<IProject> }) => data);
+  }
+}
+
 class Account {
   api: axios.AxiosInstance;
 
@@ -82,15 +104,16 @@ class Account {
       });
   }
 
-  user() {
+  user(): Promise<User> {
     return this.api(`/users/${this.user_id}`).then(
-      ({ data }: { data: TResponseDocument<TUser> }) => data.single
+      ({ data }: { data: TResponseDocument<IUser> }) =>
+        new User(this, data.single)
     );
   }
 
   projects() {
     return this.api("/projects").then(
-      ({ data }: { data: TResponseCollection<TProject> }) => data
+      ({ data }: { data: TResponseCollection<IProject> }) => data
     );
   }
 }
