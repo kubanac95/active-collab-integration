@@ -1,19 +1,12 @@
-const enum EventType {
-  NEW_TASK = "NEW_TASK",
-  NEW_TIME_ENTRY = "NEW_TIME_ENTRY",
-  TIME_ENTRY_DELETED = "TIME_ENTRY_DELETED",
-  TIME_ENTRY_UPDATED = "TIME_ENTRY_UPDATED",
-  NEW_TIMER_STARTED = "NEW_TIMER_STARTED",
-  TIMER_STOPPED = "TIMER_STOPPED",
-}
+type EventType =
+  | "NEW_TASK"
+  | "NEW_TIME_ENTRY"
+  | "TIME_ENTRY_DELETED"
+  | "TIME_ENTRY_UPDATED";
 
-enum UserStatus {
-  ACTIVE = "ACTIVE",
-}
+type UserStatus = "ACTIVE";
 
-enum TaskStatus {
-  ACTIVE = "ACTIVE",
-}
+type TaskStatus = "ACTIVE" | "DONE";
 
 interface Project {
   id: string;
@@ -47,16 +40,42 @@ interface EventTag {
   name: string;
 }
 
-interface Event {
+interface EventTimeEntry {
   id: string;
   description: string;
   userId: string;
   billable: boolean;
   projectId: string;
   timeInterval: TimeInterval;
+  isLocked: boolean;
+  hourlyRate: null | unknown;
+  costRate: null | unknown;
+  customFieldValues: unknown[];
   workspaceId: string;
   project?: Project;
   task?: Task;
   user: User;
-  tags: Array<EventTag>;
+  tags: EventTag[];
+}
+
+interface TimeEntry {
+  id: string;
+  /**
+   * If provided, time entries will be filtered by description.
+   */
+  description: string;
+}
+
+interface EventNewTask {
+  id: string;
+  name: string;
+  projectId: string;
+  assigneeIds: string[];
+  assigneeId: string;
+  estimate: string;
+  status: TaskStatus;
+  duration: string;
+  billable: boolean;
+  hourlyRate: unknown;
+  costRate: unknown;
 }

@@ -2,7 +2,7 @@ import * as axios from "axios";
 import * as express from "express";
 import * as bodyParser from "body-parser";
 
-import { signatures, projects, workspaces } from "./secret";
+import { projects } from "./secret";
 
 const router = express.Router();
 
@@ -19,27 +19,39 @@ const authenticate = (
 
   console.log(requestSignature, requestEvent);
 
-  if (signatures[requestEvent] !== requestSignature) {
-    res.sendStatus(401);
-
-    return;
-  }
-
   next();
 };
 
 router.use(authenticate);
+
 router.post("/", (req, res, next) => {
-  const data = req.body as Event;
+  const { headers, body } = req;
 
   const event = req.headers["clockify-webhook-event-type"] as EventType;
 
+  console.log(body);
+
   switch (event) {
-    case EventType.NEW_TASK: {
-      if (data.projectId !== "5f88a1dcdf6d623f4298bbe4") {
-        // test
-        break;
-      }
+    case "NEW_TASK": {
+      break;
+    }
+
+    case "NEW_TIME_ENTRY": {
+      break;
+    }
+
+    case "TIME_ENTRY_UPDATED": {
+      // data.id
+      break;
+    }
+
+    case "TIME_ENTRY_DELETED": {
+      // data.id
+      break;
+    }
+
+    default: {
+      break;
     }
   }
 

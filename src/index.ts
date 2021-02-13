@@ -2,8 +2,10 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
-import express from "express";
 import cors from "cors";
+import express from "express";
+
+import bodyParser from "body-parser";
 
 import webhooks from "./routes/webhooks";
 import Client from "./lib/activecollab";
@@ -11,6 +13,8 @@ import Client from "./lib/activecollab";
 const app = express();
 
 app.use(cors({ origin: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const port = 9000;
 
